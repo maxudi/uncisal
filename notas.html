@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas de Aula - Análise Forense Digital</title>
+    <style>
+        :root {
+            --primary-color: #1a2a6c;
+            --secondary-color: #b21f1f;
+            --accent-color: #fdbb2d;
+            --text-light: #f5f5f5;
+            --bg-dark: #0f0f0f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--bg-dark));
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .unidade {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 5px solid var(--accent-color);
+            border-radius: 8px;
+        }
+
+        .unidade-titulo {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topico {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .topico-titulo {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .topico-texto {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .destaque {
+            background: rgba(253, 187, 45, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid var(--accent-color);
+            margin: 10px 0;
+        }
+
+        .rodape {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .btn-voltar {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--accent-color);
+            color: var(--bg-dark);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-voltar:hover {
+            background: #fff;
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .container {
+                box-shadow: none;
+                background: white;
+            }
+            .btn-voltar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo_uncisal.png" alt="Logo UNCISAL" class="logo">
+            <h1>📝 Notas de Aula</h1>
+            <p class="subtitle">Fundamentos de Análise Forense Digital</p>
+            <p class="subtitle" style="margin-top: 10px;">Prof. Me. Maximiano Eduardo Pereira</p>
+        </div>
+
+        <!-- Unidade 01 -->
+        <div class="unidade">
+            <h2 class="unidade-titulo">📚 Unidade 01: Introdução e Fundamentos</h2>
+
+            <div class="topico">
+                <div class="topico-titulo">O "Fórum" Romano:</div>
+                <div class="topico-texto">
+                    Sempre comece lembrando que <strong>Forense vem de Fórum</strong>. A técnica só é forense se ela puder ser sustentada em um tribunal. Se não aguenta o contraditório, é apenas TI.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Evolução Tecnológica:</div>
+                <div class="topico-texto">
+                    Destaque que a perícia nasceu com o físico (manchas de sangue, balística) e migrou para o bit. O desafio mudou, mas o objetivo é o mesmo: responder <strong>O Quê, Como e Quem</strong>.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Ciência vs. Perícia:</div>
+                <div class="topico-texto">
+                    Na ciência comum, se o experimento falha, você refaz. Na forense, você só tem uma chance de coletar a memória RAM ou o local de crime. <strong>O erro é, muitas vezes, irreversível</strong>.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Ética e Legalidade:</div>
+                <div class="topico-texto">
+                    Ser perito é ter um "superpoder" de acesso à intimidade alheia. Reforce que a ética deve ser inabalável. O acesso deve ser estrito ao que o mandado ou a lei autoriza. Nada de "dar uma olhadinha" em arquivos fora do escopo.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Princípio de Locard Digital:</div>
+                <div class="topico-texto">
+                    No mundo físico, "todo contato deixa um rastro". No digital, isso se traduz em <strong>logs, metadados e arquivos temporários</strong>. O criminoso pode apagar o arquivo, mas o rastro da deleção é, em si, uma prova.
+                </div>
+            </div>
+        </div>
+
+        <!-- Unidades 2 e 3 -->
+        <div class="unidade">
+            <h2 class="unidade-titulo">⚖️ Unidades 2 e 3: Procedimentos e Estruturas (ISO 27037)</h2>
+
+            <div class="topico">
+                <div class="topico-titulo">A "Batalha" das Categorias:</div>
+                <div class="topico-texto">
+                    Enfatize a diferença entre o <strong>Interventor (DEFR)</strong> e o <strong>Especialista (DES)</strong>. No local do crime, o primeiro objetivo é não destruir; o segundo é extrair com rigor.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">O "Pecado Capital" Forense:</div>
+                <div class="topico-texto">
+                    <div class="destaque">
+                        Deixe claro que quebrar a <strong>Cadeia de Custódia</strong> é um caminho sem volta. Uma análise brilhante é lixo jurídico se não houver o rastro de quem tocou na prova.
+                    </div>
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">O Segredo do Slack Space:</div>
+                <div class="topico-texto">
+                    Use o exemplo do "espaço desperdiçado" no cluster para explicar por que arquivos deletados ainda vivem lá. É a diferença entre um técnico de TI e um Perito.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">SSD vs. HD:</div>
+                <div class="topico-texto">
+                    Não esqueça de mencionar o <strong>TRIM</strong>. Nos HDs antigos, o dado ficava "esquecido" até ser sobrescrito; nos SSDs modernos, o sistema limpa sozinho para ganhar performance, o que torna o tempo do perito muito mais curto.
+                </div>
+            </div>
+        </div>
+
+        <!-- Unidade 4 -->
+        <div class="unidade">
+            <h2 class="unidade-titulo">🧠 Unidade 4: Análise de Logs e Memória (RAM & Mobile)</h2>
+
+            <div class="topico">
+                <div class="topico-titulo">A RAM é o "Presente":</div>
+                <div class="topico-texto">
+                    O disco é o passado (o que foi feito), mas a memória é o que está acontecendo <strong>agora</strong>. Se o computador for desligado, as chaves de criptografia e processos "fileless" morrem com ele.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">A Regra de Ouro do AFU/BFU:</div>
+                <div class="topico-texto">
+                    <div class="destaque">
+                        No GAECO, um celular em <strong>AFU (After First Unlock)</strong> é ouro. Se ele reiniciar ou a bateria acabar, ele volta para <strong>BFU (Before First Unlock)</strong> e a chance de extrair dados cai drasticamente.
+                    </div>
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Big Data e Logs:</div>
+                <div class="topico-texto">
+                    Explique que analisar logs hoje não é abrir um arquivo .txt. É usar <strong>correlação e estatística</strong> para achar um padrão de ataque em meio a milhões de linhas de eventos.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Cuidado com a Nuvem:</div>
+                <div class="topico-texto">
+                    O log local o criminoso apaga; o log na nuvem (AWS/Azure) ele não consegue tocar. A nuvem é o "testemunho silencioso" mais confiável hoje.
+                </div>
+            </div>
+        </div>
+
+        <!-- Unidade 5 -->
+        <div class="unidade">
+            <h2 class="unidade-titulo">🛠️ Unidade 5: Ferramentas Forenses (O Arsenal)</h2>
+
+            <div class="topico">
+                <div class="topico-titulo">Não existe "Chave Mestra":</div>
+                <div class="topico-texto">
+                    Um bom perito usa <strong>Cellebrite</strong> para celular, <strong>PC-3000</strong> para HD morto e <strong>IPED</strong> para processar grandes volumes. Quem só usa uma ferramenta é um "apertador de botão".
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">O Valor do Open Source:</div>
+                <div class="topico-texto">
+                    Destaque o <strong>IPED</strong> (da nossa Polícia Federal). É um orgulho nacional e prova que software livre pode ser mais potente que soluções de milhares de dólares.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">A "Impressão Digital" (Hash):</div>
+                <div class="topico-texto">
+                    Use a analogia do DNA. Se o arquivo "engordar" um único bit, o Hash muda. É o que dá segurança ao juiz de que a prova que ele vê no tribunal é a mesma que você coletou na rua.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Hardware de Campo:</div>
+                <div class="topico-texto">
+                    <div class="destaque">
+                        Mencione que <strong>bloqueadores de escrita (Write Blockers)</strong> são obrigatórios. Conectar um HD direto no Windows sem bloqueador é "contaminar a cena do crime".
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unidade 6 -->
+        <div class="unidade">
+            <h2 class="unidade-titulo">⚖️ Unidade 6: Investigação e Relatórios (A Entrega)</h2>
+
+            <div class="topico">
+                <div class="topico-titulo">Tradução Técnica:</div>
+                <div class="topico-texto">
+                    O maior erro do perito é escrever para outros peritos. O Laudo deve ser lido por um Juiz. Transforme "offset hexadecimal" em "evidência de acesso indevido".
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">O Poder da Timeline:</div>
+                <div class="topico-texto">
+                    Uma lista de arquivos não prova crime, mas uma <strong>linha do tempo (Timeline)</strong> prova comportamento e intenção. É a narrativa que convence o magistrado.
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Imparcialidade Total:</div>
+                <div class="topico-texto">
+                    <div class="destaque">
+                        O perito não trabalha para a polícia ou para o réu; ele trabalha para a evidência. Se os dados dizem que o réu é inocente, o laudo deve ser o primeiro a gritar isso.
+                    </div>
+                </div>
+            </div>
+
+            <div class="topico">
+                <div class="topico-titulo">Responda aos Quesitos:</div>
+                <div class="topico-texto">
+                    Nunca ignore uma pergunta da autoridade. O quesito é o limite da sua atuação; responda-os de forma técnica, direta e fundamentada.
+                </div>
+            </div>
+        </div>
+
+        <!-- Dica Master -->
+        <div class="unidade" style="background: rgba(253, 187, 45, 0.1); border-left-color: var(--secondary-color);">
+            <h2 class="unidade-titulo" style="color: var(--secondary-color);">💡 Dica Master de Performance</h2>
+            
+            <div class="topico-texto">
+                Ao falar sobre o <strong>GAECO</strong> ou a <strong>PMMG</strong>, sempre que possível, conte um "causo" (sem citar nomes) que ilustre esses pontos. Por exemplo:
+            </div>
+            
+            <div class="destaque" style="margin-top: 15px; border-left-color: var(--secondary-color);">
+                <em>"Certa vez, um dispositivo reiniciou em BFU e perdemos a chance de ver o chat ativo... por isso a importância do Power Bank."</em>
+            </div>
+            
+            <div class="topico-texto" style="margin-top: 15px;">
+                Isso ancora o conhecimento na realidade dos alunos.
+            </div>
+        </div>
+
+        <div class="rodape">
+            <p>Prompts e conteúdo: Prof. Me. Maximiano Eduardo Pereira | Com auxílio de IA</p>
+            <a href="segunda.html" class="btn-voltar">← Voltar para Apresentação</a>
+        </div>
+    </div>
+</body>
+</html>

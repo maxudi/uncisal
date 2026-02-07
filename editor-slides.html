@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Slides - UNCISAL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border 0.3s;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .campo-dinamico {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #667eea;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-gerar {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-gerar:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-adicionar {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-adicionar:hover {
+            background: #38a169;
+        }
+
+        .btn-remover {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-remover:hover {
+            background: #e53e3e;
+        }
+
+        .resultado {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .resultado.show {
+            display: block;
+        }
+
+        .btn-copiar {
+            margin-top: 10px;
+            background: #ed8936;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-copiar:hover {
+            background: #dd6b20;
+        }
+
+        .lista-itens {
+            margin-top: 10px;
+        }
+
+        .item-linha {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .item-linha input,
+        .item-linha textarea {
+            flex: 1;
+        }
+
+        .item-linha button {
+            padding: 8px 15px;
+        }
+
+        .alerta {
+            background: #fef3cd;
+            border: 1px solid #f0ad4e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #856404;
+        }
+
+        .card-group {
+            background: #e6e6e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 Editor de Slides</h1>
+    <p class="subtitle">Preencha os campos abaixo e clique em "Gerar Código" para criar um novo slide</p>
+
+    <label>Tipo de Slide</label>
+    <select id="tipoSlide" onchange="atualizarCampos()">
+        <option value="">-- Selecione --</option>
+        <option value="topico">Tópico com Cards</option>
+        <option value="topicoTexto">Tópicos com Texto</option>
+        <option value="topicoTextoItens">Tópicos com Texto e Itens</option>
+        <option value="ferramentas">Ferramentas</option>
+        <option value="multi">Multidisciplinar</option>
+        <option value="caso">Estudo de Caso</option>
+        <option value="quiz">Quiz Interativo</option>
+        <option value="experiencia">Experiência Profissional</option>
+        <option value="academico">Acadêmico/Pesquisa</option>
+    </select>
+
+    <div id="camposDinamicos"></div>
+
+    <div class="btn-container">
+        <button class="btn-gerar" onclick="gerarCodigo()">✨ Gerar Código</button>
+    </div>
+
+    <div id="resultado" class="resultado"></div>
+    <button class="btn-copiar" id="btnCopiar" onclick="copiarCodigo()" style="display:none;">📋 Copiar Código</button>
+
+    <div class="alerta">
+        <strong>💡 Como usar:</strong><br>
+        1. Escolha o tipo de slide<br>
+        2. Preencha os campos<br>
+        3. Clique em "Gerar Código"<br>
+        4. Copie o código gerado<br>
+        5. Cole no final do array "slides" no arquivo <strong>conteudo.js</strong> (antes do último colchete "]")
+    </div>
+</div>
+
+<script>
+let contadorCards = 0;
+
+function atualizarCampos() {
+    const tipo = document.getElementById('tipoSlide').value;
+    const container = document.getElementById('camposDinamicos');
+    contadorCards = 0;
+    
+    if (!tipo) {
+        container.innerHTML = '';
+        return;
+    }
+
+    let html = '<div class="campo-dinamico">';
+
+    if (tipo === 'topico') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Emoji</label>
+            <input type="text" id="emoji" placeholder="⚖️">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Análise Forense">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Descrição</label>
+            <textarea id="descricao" placeholder="Um processo meticuloso..."></textarea>
+            
+            <label>Cards</label>
+            <div id="listaCards"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCard()">+ Adicionar Card</button>
+        `;
+    }
+    else if (tipo === 'topicoTexto') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Emoji (opcional)</label>
+            <input type="text" id="emoji" placeholder="🔍">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Título do Slide">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Tópicos</label>
+            <div id="listaTopicos"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarTopico()">+ Adicionar Tópico</button>
+        `;
+    }
+    else if (tipo === 'topicoTextoItens') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Emoji (opcional)</label>
+            <input type="text" id="emoji" placeholder="📋">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Título do Slide">
+            
+            <label>Tópicos com Itens</label>
+            <div id="listaTopicos"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarTopicoComItens()">+ Adicionar Tópico</button>
+        `;
+    }
+    else if (tipo === 'ferramentas') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Ferramentas & Ética">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Cards</label>
+            <div id="listaCards"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCardFerramentas()">+ Adicionar Card</button>
+            
+            <label>Rodapé</label>
+            <textarea id="rodape" placeholder="Texto que aparece abaixo dos cards"></textarea>
+        `;
+    }
+    else if (tipo === 'multi') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Multidisciplinaridade">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Descrição</label>
+            <textarea id="descricao" placeholder="A forense não se limita..."></textarea>
+            
+            <label>Cards</label>
+            <div id="listaCards"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCard()">+ Adicionar Card</button>
+        `;
+    }
+    else if (tipo === 'caso') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Emoji</label>
+            <input type="text" id="emoji" placeholder="📱">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Estudo de Caso: Cellebrite">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Extração em Dispositivos Móveis">
+            
+            <label>Texto</label>
+            <textarea id="texto" placeholder="Em investigações do GAECO..."></textarea>
+            
+            <label>Citação</label>
+            <input type="text" id="citacao" placeholder="A evidência digital é volátil...">
+        `;
+    }
+    else if (tipo === 'quiz') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Desafio de Fixação 🧠">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Pergunta</label>
+            <textarea id="pergunta" placeholder="Qual o primeiro passo..."></textarea>
+            
+            <label>Opções (4 opções)</label>
+            <input type="text" id="opcao1" placeholder="A) Primeira opção">
+            <input type="text" id="opcao2" placeholder="B) Segunda opção">
+            <input type="text" id="opcao3" placeholder="C) Terceira opção">
+            <input type="text" id="opcao4" placeholder="D) Quarta opção">
+            
+            <label>Resposta Correta (número: 0, 1, 2 ou 3)</label>
+            <input type="number" id="respostaCorreta" min="0" max="3" value="0">
+            
+            <label>Dica</label>
+            <input type="text" id="dica" placeholder="* Dica: Lembre-se do conceito...">
+        `;
+    }
+    else if (tipo === 'experiencia') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Badge</label>
+            <input type="text" id="badge" placeholder="Experiência Profissional">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Trajetória de Campo">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Cards com Itens</label>
+            <div id="listaCards"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCardComItens()">+ Adicionar Card</button>
+        `;
+    }
+    else if (tipo === 'academico') {
+        html += `
+            <label>Imagem (opcional - nome do arquivo na raiz)</label>
+            <input type="text" id="imagem" placeholder="exemplo.png">
+            
+            <label>Badge</label>
+            <input type="text" id="badge" placeholder="Acadêmico & Pesquisa">
+            
+            <label>Título (pode incluir emojis)</label>
+            <input type="text" id="titulo" placeholder="Autoridade Acadêmica">
+            
+            <label>Subtítulo (opcional)</label>
+            <input type="text" id="subtitulo" placeholder="Texto menor abaixo do título">
+            
+            <label>Cards com Itens</label>
+            <div id="listaCards"></div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCardComItens()">+ Adicionar Card</button>
+            
+            <label>Citação</label>
+            <input type="text" id="citacao" placeholder="Buscando a convergência...">
+        `;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function adicionarCard() {
+    const lista = document.getElementById('listaCards');
+    const id = contadorCards++;
+    
+    const div = document.createElement('div');
+    div.className = 'item-linha';
+    div.innerHTML = `
+        <input type="text" placeholder="Título do Card" id="cardTitulo${id}">
+        <input type="text" placeholder="Texto do Card" id="cardTexto${id}">
+        <button class="btn-remover" onclick="this.parentElement.remove()">×</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarCardFerramentas() {
+    const lista = document.getElementById('listaCards');
+    const id = contadorCards++;
+    
+    const div = document.createElement('div');
+    div.className = 'item-linha';
+    div.innerHTML = `
+        <input type="text" placeholder="Emoji" id="cardEmoji${id}" style="width: 80px;">
+        <input type="text" placeholder="Texto do Card" id="cardTexto${id}">
+        <button class="btn-remover" onclick="this.parentElement.remove()">×</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarCardComItens() {
+    const lista = document.getElementById('listaCards');
+    const id = contadorCards++;
+    
+    const div = document.createElement('div');
+    div.className = 'card-group';
+    div.innerHTML = `
+        <input type="text" placeholder="Título do Card" id="cardTitulo${id}" style="margin-bottom: 10px;">
+        <div id="itensCard${id}"></div>
+        <button type="button" class="btn-adicionar" onclick="adicionarItem(${id})" style="margin-top: 10px;">+ Adicionar Item</button>
+        <button type="button" class="btn-remover" onclick="this.parentElement.remove()" style="margin-top: 10px;">Remover Card</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarItem(cardId) {
+    const lista = document.getElementById(`itensCard${cardId}`);
+    const div = document.createElement('div');
+    div.className = 'item-linha';
+    div.innerHTML = `
+        <input type="text" placeholder="Item da lista" class="item-card-${cardId}">
+        <button class="btn-remover" onclick="this.parentElement.remove()">×</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarTopico() {
+    const lista = document.getElementById('listaTopicos');
+    const id = contadorCards++;
+    
+    const div = document.createElement('div');
+    div.className = 'card-group';
+    div.innerHTML = `
+        <input type="text" placeholder="Título do Tópico" id="topicoTitulo${id}" style="margin-bottom: 10px;">
+        <textarea placeholder="Texto do tópico" id="topicoTexto${id}" style="width: 100%; min-height: 60px;"></textarea>
+        <button class="btn-remover" onclick="this.parentElement.remove()" style="margin-top: 10px;">Remover Tópico</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarTopicoComItens() {
+    const lista = document.getElementById('listaTopicos');
+    const id = contadorCards++;
+    
+    const div = document.createElement('div');
+    div.className = 'card-group';
+    div.innerHTML = `
+        <input type="text" placeholder="Título do Tópico" id="topicoTitulo${id}" style="margin-bottom: 10px;">
+        <textarea placeholder="Texto do tópico" id="topicoTexto${id}" style="width: 100%; min-height: 60px; margin-bottom: 10px;"></textarea>
+        <label style="font-size: 0.9rem; color: #666;">Itens (recuados):</label>
+        <div id="itensTopico${id}"></div>
+        <button type="button" class="btn-adicionar" onclick="adicionarItemTopico(${id})" style="margin-top: 10px;">+ Adicionar Item</button>
+        <button type="button" class="btn-remover" onclick="this.parentElement.remove()" style="margin-top: 10px;">Remover Tópico</button>
+    `;
+    lista.appendChild(div);
+}
+
+function adicionarItemTopico(topicoId) {
+    const lista = document.getElementById(`itensTopico${topicoId}`);
+    const div = document.createElement('div');
+    div.className = 'item-linha';
+    div.innerHTML = `
+        <input type="text" placeholder="Item recuado" class="item-topico-${topicoId}">
+        <button class="btn-remover" onclick="this.parentElement.remove()">×</button>
+    `;
+    lista.appendChild(div);
+}
+
+function gerarCodigo() {
+    const tipo = document.getElementById('tipoSlide').value;
+    if (!tipo) {
+        alert('Selecione um tipo de slide!');
+        return;
+    }
+
+    let codigo = '';
+
+    try {
+        if (tipo === 'topico' || tipo === 'multi') {
+            codigo = gerarCodigoTopico();
+        } else if (tipo === 'topicoTexto') {
+            codigo = gerarCodigoTopicoTexto();
+        } else if (tipo === 'topicoTextoItens') {
+            codigo = gerarCodigoTopicoTextoItens();
+        } else if (tipo === 'ferramentas') {
+            codigo = gerarCodigoFerramentas();
+        } else if (tipo === 'caso') {
+            codigo = gerarCodigoCaso();
+        } else if (tipo === 'quiz') {
+            codigo = gerarCodigoQuiz();
+        } else if (tipo === 'experiencia' || tipo === 'academico') {
+            codigo = gerarCodigoExperiencia();
+        }
+
+        document.getElementById('resultado').textContent = codigo;
+        document.getElementById('resultado').classList.add('show');
+        document.getElementById('btnCopiar').style.display = 'block';
+    } catch(e) {
+        alert('Erro ao gerar código: ' + e.message);
+    }
+}
+
+function gerarCodigoTopico() {
+    const tipo = document.getElementById('tipoSlide').value;
+    const imagem = document.getElementById('imagem')?.value || '';
+    const emoji = document.getElementById('emoji')?.value || '';
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo')?.value || '';
+    const descricao = document.getElementById('descricao').value;
+    
+    let cards = [];
+    for (let i = 0; i < contadorCards; i++) {
+        const tituloEl = document.getElementById(`cardTitulo${i}`);
+        const textoEl = document.getElementById(`cardTexto${i}`);
+        if (tituloEl && textoEl) {
+            cards.push({ titulo: tituloEl.value, texto: textoEl.value });
+        }
+    }
+
+    let codigo = `,
+{
+    tipo: "${tipo}",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        emoji: "${emoji}",
+        titulo: "${titulo}",`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+        descricao: "${descricao}",
+        cards: [
+${cards.map(c => `            { titulo: "${c.titulo}", texto: "${c.texto}" }`).join(',\n')}
+        ]
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoTopicoTexto() {
+    const imagem = document.getElementById('imagem')?.value || '';
+    const emoji = document.getElementById('emoji')?.value || '';
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo')?.value || '';
+    
+    let topicos = [];
+    for (let i = 0; i < contadorCards; i++) {
+        const tituloEl = document.getElementById(`topicoTitulo${i}`);
+        const textoEl = document.getElementById(`topicoTexto${i}`);
+        if (tituloEl && textoEl) {
+            topicos.push({ titulo: tituloEl.value, texto: textoEl.value });
+        }
+    }
+
+    let codigo = `,
+{
+    tipo: "topicoTexto",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        emoji: "${emoji}",
+        titulo: "${titulo}",`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+        topicos: [
+${topicos.map(t => `            { titulo: "${t.titulo}", texto: "${t.texto}" }`).join(',\n')}
+        ]
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoTopicoTextoItens() {
+    const imagem = document.getElementById('imagem')?.value || '';
+    const emoji = document.getElementById('emoji')?.value || '';
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo')?.value || '';
+    
+    let topicos = [];
+    for (let i = 0; i < contadorCards; i++) {
+        const tituloEl = document.getElementById(`topicoTitulo${i}`);
+        const textoEl = document.getElementById(`topicoTexto${i}`);
+        if (tituloEl && textoEl) {
+            const itens = Array.from(document.querySelectorAll(`.item-topico-${i}`))
+                .map(el => el.value)
+                .filter(v => v);
+            topicos.push({ titulo: tituloEl.value, texto: textoEl.value, itens: itens });
+        }
+    }
+
+    let codigo = `,
+{
+    tipo: "topicoTextoItens",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        emoji: "${emoji}",
+        titulo: "${titulo}",`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+        topicos: [
+${topicos.map(t => `            {
+                titulo: "${t.titulo}",
+                texto: "${t.texto}",
+                itens: [
+${t.itens.map(i => `                    "${i}"`).join(',\n')}
+                ]
+            }`).join(',\n')}
+        ]
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoFerramentas() {
+    const imagem = document.getElementById('imagem')?.value || '';
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo')?.value || '';
+    const rodape = document.getElementById('rodape').value;
+    
+    let cards = [];
+    for (let i = 0; i < contadorCards; i++) {
+        const emojiEl = document.getElementById(`cardEmoji${i}`);
+        const textoEl = document.getElementById(`cardTexto${i}`);
+        if (emojiEl && textoEl) {
+            cards.push({ emoji: emojiEl.value, texto: textoEl.value });
+        }
+    }
+
+    let codigo = `,
+{
+    tipo: "ferramentas",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        titulo: "${titulo}",`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+        cards: [
+${cards.map(c => `            { emoji: "${c.emoji}", texto: "${c.texto}" }`).join(',\n')}
+        ],
+        rodape: "${rodape}"
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoCaso() {
+    const imagem = document.getElementById('imagem')?.value || '';
+    const emoji = document.getElementById('emoji').value;
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo').value;
+    const texto = document.getElementById('texto').value;
+    const citacao = document.getElementById('citacao').value;
+
+    let codigo = `,
+{
+    tipo: "caso",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        emoji: "${emoji}",
+        titulo: "${titulo}",
+        subtitulo: "${subtitulo}",
+        texto: "${texto}",
+        citacao: "${citacao}"
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoQuiz() {
+    const imagem = document.getElementById('imagem')?.value || '';
+    const titulo = document.getElementById('titulo').value;
+    const subtitulo = document.getElementById('subtitulo')?.value || '';
+    const pergunta = document.getElementById('pergunta').value;
+    const opcao1 = document.getElementById('opcao1').value;
+    const opcao2 = document.getElementById('opcao2').value;
+    const opcao3 = document.getElementById('opcao3').value;
+    const opcao4 = document.getElementById('opcao4').value;
+    const respostaCorreta = document.getElementById('respostaCorreta').value;
+    const dica = document.getElementById('dica').value;
+
+    let codigo = `,
+{
+    tipo: "quiz",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        titulo: "${titulo}",`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+        pergunta: "${pergunta}",
+        opcoes: [
+            "${opcao1}",
+            "${opcao2}",
+            "${opcao3}",
+            "${opcao4}"
+        ],
+        dica: "${dica}",
+        respostaCorreta: ${respostaCorreta}
+    }
+}`;
+    
+    return codigo;
+}
+
+function gerarCodigoExperiencia() {
+    const tipo = document.getElementById('tipoSlide').value;
+    const imagem = document.getElementById('imagem')?.value || '';
+    const badge = document.getElementById('badge').value;
+    const titulo = document.getElementById('titulo').value;
+    const citacao = document.getElementById('citacao')?.value || '';
+    
+    let cards = [];
+    for (let i = 0; i < contadorCards; i++) {
+        const tituloEl = document.getElementById(`cardTitulo${i}`);
+        if (tituloEl) {`;
+    
+    if (subtitulo) codigo += `
+        subtitulo: "${subtitulo}",`;
+    
+    codigo += `
+            const itens = Array.from(document.querySelectorAll(`.item-card-${i}`))
+                .map(el => el.value)
+                .filter(v => v);
+            cards.push({ titulo: tituloEl.value, itens: itens });
+        }
+    }
+
+    let codigo = `,
+{
+    tipo: "${tipo}",
+    conteudo: {`;
+    
+    if (imagem) codigo += `
+        imagem: "${imagem}",`;
+    
+    codigo += `
+        badge: "${badge}",
+        titulo: "${titulo}",
+        cards: [
+${cards.map(c => `            {
+                titulo: "${c.titulo}",
+                itens: [
+${c.itens.map(i => `                    "${i}"`).join(',\n')}
+                ]
+            }`).join(',\n')}
+        ]`;
+
+    if (citacao) {
+        codigo += `,
+        citacao: "${citacao}"`;
+    }
+
+    codigo += `
+    }
+}`;
+
+    return codigo;
+}
+
+function copiarCodigo() {
+    const texto = document.getElementById('resultado').textContent;
+    navigator.clipboard.writeText(texto).then(() => {
+        const btn = document.getElementById('btnCopiar');
+        const textoOriginal = btn.textContent;
+        btn.textContent = '✅ Copiado!';
+        btn.style.background = '#48bb78';
+        setTimeout(() => {
+            btn.textContent = textoOriginal;
+            btn.style.background = '#ed8936';
+        }, 2000);
+    });
+}
+</script>
+
+</body>
+</html>
