@@ -4,7 +4,7 @@ Apresentação interativa sobre Computação Forense para pós-graduação.
 
 ## 📋 Arquivos Principais
 
-- **index.html** - Apresentação principal (scroll-snap)
+- **segunda.html** - Apresentação principal (scroll-snap)
 - **conteudo.js** - Dados dos slides (experiência, acadêmico, tópicos, etc)
 - **quiz.js** - 30 questões do simulado forense
 - **renderizador.js** - Engine de renderização dos slides
@@ -14,7 +14,7 @@ Apresentação interativa sobre Computação Forense para pós-graduação.
 ## 🚀 Como Usar
 
 ### Localmente
-Basta abrir `index.html` em qualquer navegador moderno. Não precisa servidor.
+Basta abrir `segunda.html` em qualquer navegador moderno. Não precisa servidor.
 
 ### Deploy (EasyPanel, Vercel, Netlify, etc)
 É um site **100% estático** - sem build, sem npm, sem dependências.
@@ -22,13 +22,13 @@ Basta abrir `index.html` em qualquer navegador moderno. Não precisa servidor.
 1. Faça commit dos arquivos
 2. No EasyPanel: crie um novo serviço "Static Site"
 3. Aponte para a raiz do repositório
-4. Arquivo de entrada: `index.html`
+4. Arquivo de entrada: `segunda.html`
 
 ## 📁 Estrutura
 
 ```
 /
-├── index.html            # Página principal
+├── segunda.html          # Página principal
 ├── notas.html           # Notas do curso
 ├── editor-slides.html   # Editor
 ├── conteudo.js          # Dados (855 linhas)
