@@ -172,11 +172,38 @@
             height: 90px;
             width: auto;
         }
+
+        /* Botão Voltar ao Início */
+        .home-btn {
+            position: fixed;
+            top: 120px;
+            left: 20px;
+            z-index: 10;
+            background: var(--accent-color);
+            color: var(--bg-dark);
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .home-btn:hover {
+            background: var(--text-light);
+            border-color: var(--accent-color);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
 <div class="logo-uncisal"><img src="logo_uncisal.png" alt="Logo UNCISAL"></div>
+<a href="index.html" class="home-btn">🏠 Voltar ao Início</a>
 <div class="nav-hint">Prompts e conteúdo: Prof. Me. Maximiano Eduardo Pereira | Com auxílio de IA</div>
 <div class="progress-indicator">Slide <span id="current-slide">1</span> / <span id="total-slides">0</span></div>
 

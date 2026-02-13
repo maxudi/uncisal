@@ -1,0 +1,13 @@
+# Backups e arquivos temporários
+*.backup
+*_temp.js
+simulado_correto.txt
+
+# IDE
+.vscode/
+.idea/
+.qodo/
+
+# Sistema
+.DS_Store
+Thumbs.db

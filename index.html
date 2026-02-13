@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fundamentos de Análise Forense</title>
+    <title>Fundamentos de Análise Forense - UNCISAL</title>
     <style>
         :root {
             --primary-color: #1a2a6c;
@@ -11,6 +11,7 @@
             --accent-color: #fdbb2d;
             --text-light: #f5f5f5;
             --bg-dark: #0f0f0f;
+            --card-bg: #1a1a1a;
         }
 
         * {
@@ -20,230 +21,818 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        html, body {
+            width: 100%;
             overflow-x: hidden;
+            overflow-y: auto;
         }
 
-        /* Container de Slides */
+        body {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-sizing: border-box;
+        }
+
+        header img {
+            max-width: 234px;
+            height: auto;
+            filter: brightness(1.1);
+            flex-shrink: 0;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Container Principal */
         .container {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
+            max-width: 1200px;
+            width: 100%;
+            height: calc(100vh - 140px);
+            margin: 0 auto;
+            padding: 1.5rem 0 0 0;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
         }
 
+        /* Wrapper do Carrossel de Seções */
+        .sections-carousel {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            will-change: transform;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Cada section ocupa 100% da largura do container */
         section {
-            height: 100vh;
-            width: 100vw;
-            scroll-snap-align: start;
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Seção de Apresentação */
+        .apresentacao {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(253, 187, 45, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .apresentacao h2 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .apresentacao h2::before {
+            content: "🎓";
+            font-size: 2rem;
+        }
+
+        .apresentacao-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .professor-info {
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .professor-info img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-color);
+            margin-bottom: 1rem;
+            object-fit: cover;
+        }
+
+        .professor-info h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .professor-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .sobre-curso {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            position: relative;
-            border-bottom: 1px solid #333;
-        }
-
-        /* Estilização de Cores por Seção */
-        section:nth-child(odd) { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
-        section:nth-child(even) { background: linear-gradient(135deg, #141e30, #243b55); }
-
-        /* Conteúdo do Slide */
-        .content {
-            max-width: 900px;
+            gap: 1rem;
             width: 100%;
-            animation: fadeIn 1s ease-in;
+            box-sizing: border-box;
         }
 
-        h1 { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 20px; text-transform: uppercase; }
-        h2 { font-size: 2rem; margin-bottom: 15px; border-left: 5px solid var(--secondary-color); padding-left: 15px; }
-        p { font-size: 1.2rem; line-height: 1.6; margin-bottom: 15px; color: #ccc; }
-        
-        .grid {
+        .sobre-curso h3 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sobre-curso p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .sobre-curso ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sobre-curso ul li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .sobre-curso ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Plano de Curso */
+        .plano-curso {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(178, 31, 31, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .plano-curso h2 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .plano-curso h2::before {
+            content: "📝";
+            font-size: 2rem;
+        }
+
+        .unidades-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .unidade-item {
+            background: rgba(26, 42, 108, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-light);
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .unidade-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(253, 187, 45, 0.3);
+            border-left-color: var(--text-light);
+        }
+
+        .unidade-item h3 {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .unidade-item p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+
+        /* Cards de Navegação */
+        .navegacao {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .navegacao h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .cards-container {
+            position: relative;
+            padding: 0.5rem 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+            gap: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card-wrapper {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); }
-
-        .emoji { font-size: 2.5rem; margin-bottom: 10px; display: block; }
-
-        /* Perfil - Slide 1 */
-        .profile-container { display: flex; align-items: center; gap: 40px; }
-        .profile-text { flex: 1; }
-        .badge { background: var(--secondary-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
-
-        /* Quiz */
-        .quiz-option {
-            display: block;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(26, 42, 108, 0.4) 100%);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
             cursor: pointer;
-            transition: 0.3s;
-        }
-        .quiz-option:hover { background: var(--primary-color); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Navegação Lateral */
-        .nav-hint {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            z-index: 10;
-        }
-
-        /* Botões de Navegação */
-        .nav-buttons {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            background: var(--primary-color);
+            text-decoration: none;
             color: var(--text-light);
-            border: 2px solid var(--accent-color);
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 160px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .nav-btn:hover {
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 40px rgba(253, 187, 45, 0.4);
+        }
+
+        .card.destaque {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            border: 2px solid var(--accent-color);
+        }
+
+        .card.destaque:hover {
+            box-shadow: 0 15px 40px rgba(178, 31, 31, 0.6);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .card.destaque h3 {
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .card-btn {
             background: var(--accent-color);
             color: var(--bg-dark);
-            transform: scale(1.05);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-top: auto;
+            transition: all 0.3s;
         }
 
-        .nav-btn:disabled {
-            opacity: 0.3;
+        .card:hover .card-btn {
+            background: var(--text-light);
+            transform: scale(1.1);
+        }
+
+        /* Botões de Navegação das Sections */
+        section .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(26, 42, 108, 0.9);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        section .nav-arrow:hover:not(:disabled) {
+            background: var(--accent-color);
+            color: var(--bg-dark);
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 0 25px rgba(253, 187, 45, 0.7);
+        }
+
+        section .nav-arrow:disabled {
+            opacity: 0.15;
             cursor: not-allowed;
         }
 
-        /* Indicador de Progresso */
-        .progress-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            z-index: 10;
-            border: 1px solid var(--accent-color);
+        section .nav-arrow.left {
+            left: 10px;
         }
 
-        /* Logo UNCISAL */
-        .logo-uncisal {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 10;
+        section .nav-arrow.right {
+            right: 10px;
         }
 
-        .logo-uncisal img {
-            height: 90px;
-            width: auto;
+        /* Indicador de Seção */
+        .section-indicator {
+            text-align: center;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .section-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(253, 187, 45, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .section-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.4);
+            box-shadow: 0 0 10px rgba(253, 187, 45, 0.6);
+        }
+
+        /* Botões do Carrossel */
+        .carousel-arrow {
+            display: none;
+        }
+
+        /* Indicador de posição do carrossel */
+        .carousel-indicator {
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 2px solid var(--accent-color);
+            width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        footer p {
+            opacity: 0.7;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            header img {
+                max-width: 100px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .apresentacao-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .unidades-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem 0 0 0;
+                height: calc(100vh - 100px);
+            }
+
+            section {
+                padding: 1rem;
+            }
+
+            .card-wrapper {
+                min-width: 100%;
+            }
+
+            section .nav-arrow.left {
+                left: 5px;
+            }
+
+            section .nav-arrow.right {
+                right: 5px;
+            }
+
+            section .nav-arrow {
+                width: 45px;
+                height: 45px;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <header>
+        <div class="header-content">
+            <img src="logo_uncisal.png" alt="Logo UNCISAL">
+            <div class="header-text">
+                <h1>Fundamentos de Análise Forense Digital</h1>
+                <p>Pós-Graduação em Computação Forense - UNCISAL</p>
+            </div>
+        </div>
+    </header>
 
-<div class="logo-uncisal"><img src="logo_uncisal.png" alt="Logo UNCISAL"></div>
-<div class="nav-hint">Prompts e conteúdo: Prof. Me. Maximiano Eduardo Pereira | Com auxílio de IA</div>
-<div class="progress-indicator">Slide <span id="current-slide">1</span> / <span id="total-slides">0</span></div>
+    <div class="container">
+        <!-- Carrossel de Seções -->
+        <div class="sections-carousel" id="sections-carousel">
+            <!-- Seção de Apresentação -->
+            <section class="apresentacao" id="section-0">
+                <!-- Setas de Navegação -->
+                <button class="nav-arrow left" id="prev-section-0">‹</button>
+                <button class="nav-arrow right" id="next-section-0">›</button>
 
-<div class="nav-buttons">
-    <button class="nav-btn" id="prev-btn" onclick="navegarSlide(-1)">← Anterior</button>
-    <button class="nav-btn" id="next-btn" onclick="navegarSlide(1)">Próximo →</button>
-</div>
+            <h2>Apresentação do Curso</h2>
+            <div class="apresentacao-content">
+                <div class="professor-info">
+                    <img src="max.png" alt="Prof. Maximiano Eduardo Pereira">
+                    <h3>Prof. Me. Maximiano Eduardo Pereira</h3>
+                    <p>SGT PMMG - LABFOR GAECO/MPMG</p>
+                    <p>Doutorando em Sistemas Computacionais - UFU</p>
+                    <p>Mestre em Sistemas Computacionais - UFU</p>
+                    <div class="instituicoes-logos" style="display: flex; justify-content: center; gap: 15px; margin-top: 1.5rem; flex-wrap: wrap; align-items: center;">
+                    <img src="logo_pmmg.png" alt="PMMG" style="width: 40px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+                    <img src="logo_mpmg.png" alt="MPMG GAECO" style="width: 100px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+                    <img src="logo_ufu.png" alt="UFU" style="width: 100px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+                    <img src="logo_anhanguera.png" alt="Anhanguera" style="width: 80px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+                    <img src="logo_uncisal.png" alt="Anhanguera" style="width: 180px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+                     <img src="logo_gaeco.png" alt="Anhanguera" style="width: 50px; height: auto; border: none; border-radius: 0; filter: grayscale(100%) opacity(0.7); transition: 0.3s;" onmouseover="this.style.filter='grayscale(0%) opacity(1)'" onmouseout="this.style.filter='grayscale(100%) opacity(0.7)'">
+  
+                </div>
+                </div>
 
-<div class="container" id="slides-container">
-    <!-- Os slides serão gerados automaticamente aqui -->
-</div>
+                <div class="sobre-curso">
+                    <h3>Sobre o Curso</h3>
+                    <p>
+                        Este curso oferece uma imersão completa nos fundamentos da análise forense digital, 
+                        combinando rigor científico com a experiência prática de campo. Através de 6 unidades 
+                        estruturadas, você aprenderá desde os conceitos básicos até técnicas avançadas de 
+                        investigação e elaboração de laudos periciais.
+                    </p>
+                    <h3>O que você aprenderá:</h3>
+                    <ul>
+                        <li>Fundamentos e ética da análise forense digital</li>
+                        <li>Técnicas de coleta e preservação de evidências</li>
+                        <li>Análise de sistemas de arquivos e recuperação de dados</li>
+                        <li>Investigação de logs e memória volátil</li>
+                        <li>Utilização de ferramentas forenses profissionais</li>
+                        <li>Metodologias de investigação e elaboração de relatórios</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-<script src="conteudo.js"></script>
-<script src="quiz.js"></script>
-<script src="renderizador.js"></script>
-<script>
-    let currentSlide = 0;
-    const container = document.querySelector('.container');
-    let sections;
-    let totalSlides;
+        <!-- Plano de Curso -->
+        <section class="plano-curso" id="section-1">
+            <!-- Setas de Navegação -->
+            <button class="nav-arrow left" id="prev-section-1">‹</button>
+            <button class="nav-arrow right" id="next-section-1">›</button>
 
-    // Mesclar os slides do quiz ao array principal
-    slides.push(...quizSlides);
+            <h2>Plano de Curso</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; text-align: center;">
+                Nossa jornada pelos fundamentos da análise forense digital 💪
+            </p>
+            <div class="unidades-grid">
+                <a href="unidades/unidade1/index.html" class="unidade-item">
+                    <h3>🔍 Unidade 01</h3>
+                    <p><strong>Introdução à Análise Forense</strong></p>
+                    <p>Conceitos fundamentais, histórico da evolução tecnológica, ética e legalidade na perícia digital.</p>
+                </a>
+                <a href="unidades/unidade2/index.html" class="unidade-item">
+                    <h3>⚖️ Unidade 02</h3>
+                    <p><strong>Coleta e Preservação</strong></p>
+                    <p>Norma ISO/IEC 27037, cadeia de custódia, integridade e procedimentos de aquisição de evidências.</p>
+                </a>
+                <a href="unidades/unidade3/index.html" class="unidade-item">
+                    <h3>💾 Unidade 03</h3>
+                    <p><strong>Sistemas de Arquivos</strong></p>
+                    <p>Estruturas lógicas (NTFS, EXT4, FAT), anatomia de discos e técnicas de recuperação de dados.</p>
+                </a>
+                <a href="unidades/unidade4/index.html" class="unidade-item">
+                    <h3>🧠 Unidade 04</h3>
+                    <p><strong>Análise de Logs e Memória</strong></p>
+                    <p>Investigação de logs de sistema, análise de memória volátil e artefatos temporários.</p>
+                </a>
+                <a href="unidades/unidade5/index.html" class="unidade-item">
+                    <h3>🔧 Unidade 05</h3>
+                    <p><strong>Ferramentas Forenses</strong></p>
+                    <p>Softwares especializados, técnicas avançadas de análise, hash forense e automação.</p>
+                </a>
+                <a href="unidades/unidade6/index.html" class="unidade-item">
+                    <h3>📊 Unidade 06</h3>
+                    <p><strong>Investigação e Relatórios</strong></p>
+                    <p>Metodologias internacionais (NIST/ISO), técnicas de análise e redação de laudos periciais.</p>
+                </a>
+            </div>
+        </section>
 
-    // Gerar slides a partir do conteudo.js
-    gerarSlides();
-    
-    // Atualizar referências após gerar slides
-    sections = document.querySelectorAll('section');
-    totalSlides = sections.length;
-    document.getElementById('total-slides').textContent = totalSlides;
-    
-    function navegarSlide(direcao) {
-        currentSlide += direcao;
-        if (currentSlide < 0) currentSlide = 0;
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-        
-        sections[currentSlide].scrollIntoView({ behavior: 'smooth' });
-        atualizarBotoes();
-    }
+        <!-- Cards de Navegação -->
+        <section class="navegacao" id="section-2">
+            <!-- Setas de Navegação -->
+            <button class="nav-arrow left" id="prev-section-2">‹</button>
+            <button class="nav-arrow right" id="next-section-2">›</button>
 
-    function atualizarBotoes() {
-        document.getElementById('prev-btn').disabled = currentSlide === 0;
-        document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
-        document.getElementById('current-slide').textContent = currentSlide + 1;
-    }
+            <h2>🎯 Escolha sua Jornada de Aprendizado</h2>
+            <div class="cards-container">
+                <div class="cards-grid" id="cards-grid">
+                    <!-- Curso Completo -->
+                    <div class="card-wrapper">
+                        <a href="curso-completo.html" class="card destaque">
+                    <div>
+                        <div class="card-icon">📚</div>
+                        <h3>Curso Completo</h3>
+                        <p>Acesse todo o conteúdo das 6 unidades em uma única apresentação interativa</p>
+                    </div>
+                            <div class="card-btn">Acessar Conteúdo Completo</div>
+                        </a>
+                    </div>
 
-    // Detectar scroll para atualizar slide atual
-    container.addEventListener('scroll', () => {
-        sections.forEach((section, index) => {
-            const rect = section.getBoundingClientRect();
-            if (rect.top >= -100 && rect.top <= 100) {
-                currentSlide = index;
-                atualizarBotoes();
+                    <!-- Unidade 1 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade1/index.html" class="card">
+                    <div>
+                        <div class="card-icon">🔍</div>
+                        <h3>Unidade 01</h3>
+                        <p>Introdução à Análise Forense Digital</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+
+                    <!-- Unidade 2 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade2/index.html" class="card">
+                    <div>
+                        <div class="card-icon">⚖️</div>
+                        <h3>Unidade 02</h3>
+                        <p>Coleta e Preservação de Evidências</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+
+                    <!-- Unidade 3 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade3/index.html" class="card">
+                    <div>
+                        <div class="card-icon">💾</div>
+                        <h3>Unidade 03</h3>
+                        <p>Sistemas de Arquivos e Armazenamento</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+
+                    <!-- Unidade 4 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade4/index.html" class="card">
+                    <div>
+                        <div class="card-icon">🧠</div>
+                        <h3>Unidade 04</h3>
+                        <p>Análise de Logs e Memória</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+
+                    <!-- Unidade 5 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade5/index.html" class="card">
+                    <div>
+                        <div class="card-icon">🔧</div>
+                        <h3>Unidade 05</h3>
+                        <p>Ferramentas e Técnicas de Análise</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+
+                    <!-- Unidade 6 -->
+                    <div class="card-wrapper">
+                        <a href="unidades/unidade6/index.html" class="card">
+                    <div>
+                        <div class="card-icon">📊</div>
+                        <h3>Unidade 06</h3>
+                        <p>Investigação e Elaboração de Laudos</p>
+                    </div>
+                            <div class="card-btn">Começar</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div>
+
+        <!-- Indicador de Seções -->
+        <div class="section-indicator" id="section-indicator"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 - Prof. Me. Maximiano Eduardo Pereira | UNCISAL - Pós-Graduação em Computação Forense</p>
+        <p style="margin-top: 0.5rem; opacity: 0.5;">Prompts e conteúdo: Prof. Maximiano | Com auxílio de IA</p>
+    </footer>
+
+    <script>
+        // ========== Carrossel de Seções ==========
+        const container = document.querySelector('.container');
+        const sectionsCarousel = document.getElementById('sections-carousel');
+        const sections = document.querySelectorAll('section[id^="section-"]');
+        let currentSection = 0;
+        const totalSections = sections.length;
+
+        // Criar indicadores (dots) das seções
+        const sectionIndicator = document.getElementById('section-indicator');
+        for (let i = 0; i < totalSections; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'section-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => irParaSection(i);
+            dot.title = ['Apresentação', 'Plano de Curso', 'Unidades'][i];
+            sectionIndicator.appendChild(dot);
+        }
+
+        // Adicionar event listeners às setas de navegação
+        sections.forEach((section, idx) => {
+            const prevBtn = section.querySelector('.nav-arrow.left');
+            const nextBtn = section.querySelector('.nav-arrow.right');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (!prevBtn.disabled) navegarSection(-1);
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (!nextBtn.disabled) navegarSection(1);
+                });
             }
         });
-    });
 
-    // Navegação por teclado
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') navegarSlide(1);
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') navegarSlide(-1);
-    });
+        function navegarSection(direcao) {
+            const novaSection = currentSection + direcao;
+            if (novaSection >= 0 && novaSection < totalSections) {
+                irParaSection(novaSection);
+            }
+        }
 
-    // Inicializar
-    atualizarBotoes();
-</script>
+        function irParaSection(index) {
+            currentSection = index;
+            // Usar a largura do container ao invés da section
+            const sectionWidth = container.offsetWidth;
+            const displacement = -sectionWidth * index;
+            
+            sectionsCarousel.style.transform = `translateX(${displacement}px)`;
+            
+            // Atualizar botões de todas as sections
+            sections.forEach((section, idx) => {
+                const prevBtn = section.querySelector('.nav-arrow.left');
+                const nextBtn = section.querySelector('.nav-arrow.right');
+                
+                if (prevBtn) prevBtn.disabled = index === 0;
+                if (nextBtn) nextBtn.disabled = index === totalSections - 1;
+            });
+            
+            // Atualizar dots
+            document.querySelectorAll('.section-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
 
+        // Navegação por teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && !e.shiftKey) navegarSection(-1);
+            if (e.key === 'ArrowRight' && !e.shiftKey) navegarSection(1);
+        });
+
+        // Atualizar em resize
+        window.addEventListener('resize', () => {
+            irParaSection(currentSection);
+        });
+
+        // Inicializar
+        irParaSection(0);
+    </script>
 </body>
 </html>

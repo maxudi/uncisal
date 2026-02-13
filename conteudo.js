@@ -19,7 +19,7 @@ const slides = [
                     titulo: "Inteligência e GAECO",
                     itens: [
                         "🔹 <strong>PMMG (Desde 2002):</strong> Análise criminal e suporte à decisão via Big Data.",
-                        "🔹 <strong>LABFOR GAECO:</strong> Responsável Técnico e Perito em mídias digitais.",
+                        "🔹 <strong>LABFOR GAECO:</strong> Responsável Técnico do Laboratório Forense (Sgt. PMMG cedido ao MPMG).",
                         "🔹 <strong>Certificação Cellebrite:</strong> Extração avançada e combate ao crime organizado."
                     ]
                 }
